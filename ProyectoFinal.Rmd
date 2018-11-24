@@ -1,0 +1,160 @@
+---
+title: "Proyecto Final"
+author: "Adrian Figueroa Rodriguez"
+date: "23 de noviembre de 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggrepel)
+data <- read.csv("srp.csv", stringsAsFactors = FALSE)
+data2 <- read.csv("SETAP.csv")
+```
+
+# Pregunta 1
+## Do you contribute to open source projects?
+```{r}
+ggplot(osData <- data.frame(table(data$OpenSource)), aes(osData$Var1, osData$Freq, fill = osData$Var1)) +
+  geom_bar(stat = "identity") +
+  ggrepel::geom_label_repel(aes(label = Freq), data = osData)+
+  labs(x = "Opciones", y = "Personas", title = "Do you contribute to open source projects?", fill = "Respuestas")
+
+```
+
+### Se nota que mas de la mitad de las personas que usan stackoverflow no aportan o participan en proyectos de open source
+
+
+
+# Pregunta 2
+## In which country do you currently reside?
+
+```{r}
+#pregunta 2
+ggplot(cData <- head(data.frame(table(data$Country))), aes(cData$Var1, cData$Freq, fill = cData$Var1)) +
+  geom_bar(stat = "identity") +
+  ggrepel::geom_label_repel(aes(label = Var1), data = cData)+
+  labs(x = "Paises", y = "Personas", title = "In Which country do you currently reside?", fill = "Respuestas")
+```
+
+### Por los datos que se muestran se puede notar que en Algeria tienen mas desarrolladores que algun otro lado de los primeros 6.
+
+# Pregunta 3
+## Are you currently enrolled in a formal, degree-granting college or university program?
+
+```{r}
+ggplot(cstudent <- data.frame(table(data$Student)), aes(cstudent$Var1, cstudent$Freq, fill = cstudent$Var1)) +
+  geom_bar(stat = "identity") +
+  ggrepel::geom_label_repel(aes(label = cstudent$Freq), data = cstudent)+
+  labs(x = "Escolaridad", y = "Personas",  title = "Are you currentyly enrolled in a formal, degre granting college or university program?", fill = "Respuestas")
+```
+
+### La mayoria de las personas que trabajan en stackoverflow no tienen estudios formales.
+
+# Pregunta 4
+## Which of the following best describes your current employment status?
+
+```{r}
+ggplot(dfemploy <- data.frame(table(data$Employment)), aes(dfemploy$Var1 , dfemploy$Freq , fill = dfemploy$Var1))+
+  geom_bar(stat = "identity") +
+  ggrepel::geom_label_repel(aes(label = dfemploy$Freq), data = dfemploy)+
+  labs(x = "Status", y = "Personas", title.size = .5,title = "Which of the following best describes your current employment status?", colour = "Estado", fill = "Status")
+```
+
+### La mayor parte de los usuarios de stackoverflow tienen un trabajo de tiempo completo y muy pocos o no tienen o estan retirados ya.
+
+# Pregunta 5
+## Which of the following best describes the highest level of formal education that you've completed?
+
+```{r}
+ggplot(dfeducation <- data.frame(table(data$FormalEducation)), aes(dfeducation$Var1, dfeducation$Freq, fill = dfeducation$Var1))+
+  geom_bar(stat = "identity") +
+  ggrepel::geom_label_repel(aes(label = dfeducation$Freq), data = dfeducation)+
+  labs(x = "Educacion", y = "Personas", title.size = .5,title = "Which of the following best describes the highest level of formal education that you've completed?", colour = "Grado", fill = "Escolaridad")
+```
+
+### La mayor parte de las personas que si tienen un estudio en stackoverflow  tiene un bachelor's degree y Masters degree, hay muy pocos que no tienen ninguna esocolaridad formal o han alcanzado un Professional degree
+
+# Pregunta 6
+## How many observations per year?
+
+```{r}
+ggplot(dfopy <- data.frame(table(data2$year)), aes(dfopy$Var1, dfopy$Freq, fill = dfopy$Var1))+
+  geom_bar(stat = "identity") +
+  ggrepel::geom_label_repel(aes(label = dfopy$Freq), data = dfopy)+
+  labs(x = "AÃ±os", y = "Observacioens", title.size = .5,title = "How many observations per year?", colour = "AÃ±o", fill = "Año")
+```
+
+### En el 2018 es cuando se hacen mas observaciones y en el 2012 la menor cantidad de observaciones.
+
+
+# Pregunta 7
+## In which year and season the collection data process began?
+
+```{r}
+ggplot(t1ysdc <- as.data.frame(table(data2$year, data2$semester)), aes(Var1,Freq))+
+  geom_point(aes(color = Var2))+
+  ggrepel::geom_label_repel(aes(label = Freq), data = t1ysdc)+
+  labs(x = "Años", y = "Observaciones", title.size = .5,title = "How many observations per year?", colour = "Semestre")
+```
+
+### Se puede notar que la cantidad de observacioens en primavera van aumentando con año y las de otoño se mantienen 2 años, cae y luego mejora.
+
+# Pregunta 8
+## And how many observations per gender (male vs female) is divided by year?
+
+```{r}
+ggplot(dfog <- data.frame(table(data2$teamLeadGender)), aes(dfog$Var1 , dfog$Freq, fill = dfog$Var1))+
+  geom_bar(stat = "identity")+
+  ggrepel::geom_label_repel(aes(label = dfog$Freq), data = dfog)+
+  labs(x = "Sexo", y = "Cantidad", title.size = .5,title = "How many observations the data shows per gender (male vs female) in total?", colour = "Sexo", fill = "Sexo")
+
+ggplot(dftsbogf <- data.frame(table(subset(data2, teamLeadGender=="F", select = year ))), aes(dftsbogf$Var1, dftsbogf$Freq, fill = dftsbogf$Var1))+
+  geom_bar(stat = "identity")+
+  ggrepel::geom_label_repel(aes(label = dftsbogf$Freq), data = dftsbogf)+
+  labs(x = "Año", y = "Mujeres", title.size = .5,title = "And how many observations per gender (male vs female) is divided by year?", colour = "Año", fill = "Sexo")
+
+ggplot(dftsbogm <- data.frame(table(subset(data2, teamLeadGender=="M", select = year ))), aes(dftsbogm$Var1, dftsbogm$Freq, fill = dftsbogm$Var1))+
+  geom_bar(stat = "identity")+
+  ggrepel::geom_label_repel(aes(label = dftsbogm$Freq), data = dftsbogm)+
+  labs(x = "Año", y = "Hombres", title.size = .5,title = "And how many observations per gender (male vs female) is divided by year?", colour = "Año", fill = "Sexo")
+```
+
+### Se puede ver que hay mas observaciones masculinas que femeninas, tambien se puede apreciar que en el 2012 no habia observaciones femeninas solo masculinas y que en todos los años hay mas observaciones masculinas que femeninas.
+
+# Pregunta 9
+## How many students are grouped by each team?  And how many students are grouped by each team per semester and per year?  (This question should show 3 graphs)
+```{r}
+
+```
+
+
+# Pregunta 10
+## What is the relationship between the number of commits (commitCount) and the total hours of coding deliverables (codingDeliveablesHoursTotal)? Can we infer a relationship? Could we define this relationship as positive or negative?
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
